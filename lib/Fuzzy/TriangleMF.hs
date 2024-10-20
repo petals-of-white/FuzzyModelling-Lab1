@@ -1,4 +1,4 @@
-module TriangleMF where
+module Fuzzy.TriangleMF where
 
 -- | Трикутне число
 data TriangleMF a = TriangleMF {triangleA :: a, triangleB :: a, triangleC :: a}

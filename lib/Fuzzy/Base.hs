@@ -1,7 +1,6 @@
 {-# LANGUAGE TypeFamilies #-}
 
 module Fuzzy.Base where
-
 class Fuzzy f e where
     type Crisp e
     supp :: f e -> Crisp e
