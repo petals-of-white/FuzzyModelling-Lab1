@@ -1,4 +1,4 @@
-module TrapeziumMF where
+module Fuzzy.TrapeziumMF where
 
 -- | Трапецієподібне число
 data TrapeziumMF a = TrapeziumMF {trapeziumA :: a, trapeziumB :: a, trapeziumC :: a, trapeziumD :: a}
