@@ -1,4 +1,8 @@
+{-# LANGUAGE TypeFamilies #-}
 module Fuzzy.TriangleMF where
+
+import           Fuzzy.Base
+import           Fuzzy.Interval
 
 -- | Трикутне число
 data TriangleMF a = TriangleMF {triangleA :: a, triangleB :: a, triangleC :: a}
@@ -30,3 +34,16 @@ instance (Fractional a, Ord a) => Fractional (TriangleMF a) where
         b3 = b1 / b2
         c3 = c1 / c2
     fromRational r = TriangleMF fromR fromR fromR where fromR = fromRational r
+
+instance (Fractional a, Ord a) => Fuzzy TriangleMF a  where
+    type Crisp a = [Interval a]
+    type Returned TriangleMF a = a
+    supp (TriangleMF a b c) = [Interval (Exclude a) (Include b), Interval (Include b) (Exclude c)]
+    is x (TriangleMF a b c) | x <= a || x >= c = 0
+                            | a <= x && x <= b = (x - a) / (b - a)
+                            | b <= x && x <= c = (c - x) / (c - b)
+
+    height (TriangleMF _a b _c) = b
+    core = mode
+    alphacut (TriangleMF a b c) alpha = _
+    mode (TriangleMF _a b _c) = [Interval (Include b) (Include b)]
