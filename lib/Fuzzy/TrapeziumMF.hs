@@ -1,4 +1,7 @@
+{-# LANGUAGE TypeFamilies #-}
 module Fuzzy.TrapeziumMF where
+import           Fuzzy.Base
+import           Fuzzy.Interval
 
 -- | Трапецієподібне число
 data TrapeziumMF a = TrapeziumMF {trapeziumA :: a, trapeziumB :: a, trapeziumC :: a, trapeziumD :: a}
@@ -39,3 +42,20 @@ instance (Fractional a, Ord a) => Fractional (TrapeziumMF a) where
 
     fromRational r = TrapeziumMF fromR fromR fromR fromR
         where fromR = fromRational r
+
+instance (Fractional a, Ord a) => Fuzzy TrapeziumMF a where
+    type Crisp a = [Interval a]
+    type Returned TrapeziumMF a = a
+    supp (TrapeziumMF a b c d) = [Between (Exclude a) (Exclude b)]
+    is x (TrapeziumMF a b c d)  | x <= a = 0
+                                | a <= x && x <= b = (x - a) / (b - a)
+                                | b <= x && x <= c = 1
+                                | c <= x && x <= d = (d - x) / (d - c)
+                                | x >= d = 0
+
+    height = const 1
+    core (TrapeziumMF a b c d) = [Between (Include b) (Include c)]
+    alphacut (TrapeziumMF a b c d) alpha =
+        [To (Include (d + alpha * (c - d))),
+         From (Include (alpha * (b - a) + a))]
+    mode = core
