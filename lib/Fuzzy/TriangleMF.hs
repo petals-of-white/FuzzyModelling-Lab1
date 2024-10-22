@@ -38,12 +38,18 @@ instance (Fractional a, Ord a) => Fractional (TriangleMF a) where
 instance (Fractional a, Ord a) => Fuzzy TriangleMF a  where
     type Crisp a = [Interval a]
     type Returned TriangleMF a = a
-    supp (TriangleMF a b c) = [Interval (Exclude a) (Include b), Interval (Include b) (Exclude c)]
+    supp (TriangleMF a b c) = [Between (Exclude a) (Include b), Between (Include b) (Exclude c)]
     is x (TriangleMF a b c) | x <= a || x >= c = 0
                             | a <= x && x <= b = (x - a) / (b - a)
                             | b <= x && x <= c = (c - x) / (c - b)
 
     height (TriangleMF _a b _c) = b
     core = mode
-    alphacut (TriangleMF a b c) alpha = _
-    mode (TriangleMF _a b _c) = [Interval (Include b) (Include b)]
+    alphacut (TriangleMF a b c) alpha
+        | alpha <= 0 = [To (Include a), From (Include c)]
+        | otherwise =
+            [From (Include (alpha * b + a * (1 - alpha))),
+             To (Include (c - alpha * (c - b)))]
+
+
+    mode (TriangleMF _a b _c) = [Between (Include b) (Include b)]
