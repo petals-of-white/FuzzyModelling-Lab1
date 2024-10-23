@@ -52,6 +52,7 @@ library fuzzy
 
   hs-source-dirs:   lib
   exposed-modules:
+    Fuzzy.FiniteUniversum
     Fuzzy.Base
     Fuzzy.Interval
     Fuzzy.MF
