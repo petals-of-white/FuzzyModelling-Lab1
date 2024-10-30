@@ -7,13 +7,13 @@ import           Data.Maybe          (fromMaybe)
 import           Data.Set            as Set
 import           Fuzzy.Base
 
-newtype FuzzyFiniteUniversum v k = FuzzyFiniteUniversum (Map k v)
+newtype FuzzyFiniteUniversum v k = FuzzyFiniteUniversum (Map k v) deriving Show
 
-newtype AlgrebraicFU v k = AlgrebraicFU (Map k v)
+newtype AlgrebraicFU v k = AlgrebraicFU (Map k v) deriving Show
 
-newtype MaxMinFU v k = MaxMinFU (Map k v)
+newtype MaxMinFU v k = MaxMinFU (Map k v) deriving Show
 
-newtype BoundedFU v k = BoundedFU (Map k v)
+newtype BoundedFU v k = BoundedFU (Map k v) deriving Show
 
 instance (Fractional v, Ord k, Ord v) => Fuzzy (FuzzyFiniteUniversum v) k where
     type Crisp k = Set k
