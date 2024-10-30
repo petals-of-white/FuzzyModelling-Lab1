@@ -54,6 +54,9 @@ library fuzzy
   exposed-modules:
     Fuzzy.Base
     Fuzzy.FiniteUniversum
+    Fuzzy.FiniteUniversum.Algebraic
+    Fuzzy.FiniteUniversum.Bounded
+    Fuzzy.FiniteUniversum.MaxMin
     Fuzzy.Interval
     Fuzzy.MF
     Fuzzy.TrapeziumMF
