@@ -35,9 +35,9 @@ instance (Fractional a, Ord a) => Fractional (TriangleMF a) where
         c3 = c1 / c2
     fromRational r = TriangleMF fromR fromR fromR where fromR = fromRational r
 
-instance (Fractional a, Ord a) => Fuzzy TriangleMF a  where
-    type Crisp a = [Interval a]
-    type Returned TriangleMF a = a
+instance (Fractional k, Ord k) => Fuzzy TriangleMF k  where
+    type Crisp TriangleMF k = [Interval k]
+    type Returned TriangleMF k = k
     supp (TriangleMF a b c) = [Between (Exclude a) (Exclude c)]
     is x (TriangleMF a b c) | x <= a || x >= c = 0
                             | a <= x && x <= b = (x - a) / (b - a)
