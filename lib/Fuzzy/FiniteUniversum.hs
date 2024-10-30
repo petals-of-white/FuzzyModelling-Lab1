@@ -1,5 +1,7 @@
 {-# LANGUAGE TypeFamilies #-}
-module Fuzzy.FiniteUniversum where
+module Fuzzy.FiniteUniversum (
+    FuzzyFiniteUniversum(..), module A, module B, module MaxMin
+    ) where
 
 import qualified Data.List                       as List
 import           Data.Map                        as Map
@@ -7,11 +9,11 @@ import qualified Data.Map.Merge.Lazy             as Map
 import           Data.Maybe                      (fromMaybe)
 import           Data.Set                        as Set
 import           Fuzzy.Base
-import           Fuzzy.FiniteUniversum.Algebraic
-import           Fuzzy.FiniteUniversum.Bounded
-import           Fuzzy.FiniteUniversum.MaxMin
+import           Fuzzy.FiniteUniversum.Algebraic as A
+import           Fuzzy.FiniteUniversum.Bounded   as B
+import           Fuzzy.FiniteUniversum.MaxMin    as MaxMin
 
-newtype FuzzyFiniteUniversum v k = FuzzyFiniteUniversum { finiteMap :: Map k v}
+newtype FuzzyFiniteUniversum v k = FuzzyFiniteUniversum { finiteMap :: Map k v} deriving Show
 
 third :: (a, b, c) -> c
 third (_,_, x) = x
