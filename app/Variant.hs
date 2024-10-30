@@ -15,8 +15,8 @@ data OpsImplementation = Algebraic | MaxMin | Bounded deriving (Show)
 calcV :: Int -> Int -> Int
 calcV g k = g + k + 1
 
-makeA :: Int -> FuzzyFiniteUniversum Double Int
-makeA v = FuzzyFiniteUniversum $ Map.fromAscList [(i, 1 / fromIntegral v) | i <- [0..v]]
+makeA :: Int -> FuzzyFiniteUniversum Double Double
+makeA v = FuzzyFiniteUniversum $ Map.fromAscList [(fromIntegral i, 1 / fromIntegral v) | i <- [0..v]]
 
 makeB :: Int -> FuzzyFiniteUniversum Double Double
-makeB v = FuzzyFiniteUniversum $ Map.fromAscList [(0.5 * fromIntegral i, (4 * fromIntegral v) / fromIntegral v) | i <- [0..v]]
+makeB v = FuzzyFiniteUniversum $ Map.fromAscList [(0.5 * fromIntegral i, fromIntegral i / (4 * fromIntegral v)) | i <- [0..v]]
