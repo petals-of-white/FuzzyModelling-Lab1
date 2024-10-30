@@ -44,7 +44,7 @@ instance (Fractional a, Ord a) => Fractional (TrapeziumMF a) where
         where fromR = fromRational r
 
 instance (Fractional a, Ord a) => Fuzzy TrapeziumMF a where
-    type Crisp a = [Interval a]
+    type Crisp TrapeziumMF a = [Interval a]
     type Returned TrapeziumMF a = a
     supp (TrapeziumMF a b c d) = [Between (Exclude a) (Exclude b)]
     is x (TrapeziumMF a b c d)  | x <= a = 0
