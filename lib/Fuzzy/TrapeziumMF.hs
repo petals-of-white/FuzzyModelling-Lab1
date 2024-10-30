@@ -6,6 +6,9 @@ import           Fuzzy.Interval
 -- | Трапецієподібне число
 data TrapeziumMF a = TrapeziumMF {trapeziumA :: a, trapeziumB :: a, trapeziumC :: a, trapeziumD :: a}
 
+instance (Show a) => Show (TrapeziumMF a) where
+  show (TrapeziumMF a b c d) = "Trapezium " ++ show (a,b,c,d)
+
 instance (Num a, Ord a) => Num (TrapeziumMF a) where
     (TrapeziumMF a1 b1 c1 d1) + (TrapeziumMF a2 b2 c2 d2) = TrapeziumMF a3 b3 c3 d3 where
         a3 = a1 + a2

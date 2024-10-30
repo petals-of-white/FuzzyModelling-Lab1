@@ -6,6 +6,8 @@ import           Fuzzy.Interval
 
 -- | Трикутне число
 data TriangleMF a = TriangleMF {triangleA :: a, triangleB :: a, triangleC :: a}
+instance (Show a) => Show (TriangleMF a) where
+  show (TriangleMF a b c) = "Triangle " ++ show (a,b,c)
 
 instance (Num a, Ord a) => Num (TriangleMF a) where
     (TriangleMF a1 b1 c1) + (TriangleMF a2 b2 c2) = TriangleMF a3 b3 c3 where
