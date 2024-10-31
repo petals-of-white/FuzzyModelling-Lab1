@@ -25,50 +25,56 @@ setup window = do
         kInput <- UI.input # set UI.type_ "number" # set UI.id_ "k" # set UI.name "k" # set SVG.min "0" # set SVG.max "9"
         vValue <- UI.label # set UI.text "V = "
 
-        -- TODO: set type
-        calcButton <- UI.button # set UI.text "Обчислити"
-
-        -- TODO: set title
-        arithopselect <- UI.listBox (pure (enumFromTo Add Div)) (pure $ Just Sub) (pure $ \op -> UI.label # set UI.text (show op))
-
-
+        calcButton <- UI.button # set UI.type_ "button" # set UI.text "Обчислити"
         setOpsSection <- UI.div
 
         setsAB <- UI.div
 
         setsInfo <- UI.div
 
+        arithSection <- UI.div
+
+        fuzzyNumberSection <- UI.div
 
         _ <- getBody window #+ [
             UI.header #+ [UI.h1 # set UI.text "Лабораторна робота №1. Рівас Сіваш Максим ЗК-31мн"],
             UI.div #+ [
                 UI.div #+ [element gLabel, element gInput,
                 element kLabel, element kInput, element vValue],
-
-                element calcButton, element arithopselect,
+                element calcButton,
                 element setsAB,
                 element setsInfo,
-                element setOpsSection
-
+                element setOpsSection,
+                element fuzzyNumberSection,
+                element arithSection
                 ]
             ]
 
-        -- on UI.click calcButton $ const $ do
-        -- g <- gInput # get UI.value
-        -- k <- kInput # get UI.value
-        let g = "2"
-            k = "5"
-        let v = calcV (read g) (read k)
-            setA = makeA v
-            setB = makeB v
+        on UI.click calcButton $ const $ do
+            g <- read <$> gInput # get UI.value
+            k <- read <$> kInput # get UI.value
+            let --g = 2
+                --k = 5
+                VariantData {
+                    varV = v,
+                    varSetA = setA, varSetB = setB,
+                    varTriangles = (t1,t2),
+                    varTrapezia = (trap1, trap2)} = varData g k
 
-        vValue # set' UI.text ("V = " ++ show v)
 
-        sets <- displayAB setA setB
-        _ <- element setOpsSection #+ [setOps setA setB v]
-        _ <- element setsAB # set UI.children [sets]
-        _ <- element setsInfo #+ [displaySetInfo setA setB]
+            vValue # set' UI.text ("V = " ++ show v)
 
-        _ <- element calcButton # set UI.text "I have been clicked!"
-        return ()
+            sets <- displayAB setA setB
+            setOpsEl <- setOps setA setB v
+            setsInfoEl <- displaySetInfo setA setB
+            arithOpSectionEl <- arithOpSection (setA,setB) (t1,t2) (trap1, trap2)
+            trianglesEl <- triangleFuzzyNumberInfo t1 t2
+            trapeziaEl <- trapeziumFuzzyNumberInfo trap1 trap2
+            
+            _ <- element setOpsSection # set UI.children [setOpsEl]
+            _ <- element setsAB # set UI.children [sets]
+            _ <- element setsInfo # set UI.children [setsInfoEl]
+            _ <- element arithSection # set UI.children [arithOpSectionEl]
+            _ <- element fuzzyNumberSection # set UI.children [trianglesEl, trapeziaEl]
+            return ()
 
