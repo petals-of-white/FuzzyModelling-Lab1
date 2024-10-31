@@ -169,25 +169,25 @@ arithOpSection (fuzzyA, fuzzyB) (triangleA, triangleB) (trapeziumA, trapeziumB) 
             UI.th # set UI.text "Множення",
             UI.th # set UI.text "Ділення"],
         UI.tr #+ [
-            UI.th # set UI.text "A і B",
-            UI.th # set UI.text (show (fuzzyA + fuzzyB)),
-            UI.th # set UI.text (show (fuzzyA - fuzzyB)),
-            UI.th # set UI.text (show (fuzzyA * fuzzyB)),
-            UI.th # set UI.text (show (fuzzyA / fuzzyB))
+            UI.td # set UI.text "A і B",
+            UI.td # set UI.text (show (fuzzyA + fuzzyB)),
+            UI.td # set UI.text (show (fuzzyA - fuzzyB)),
+            UI.td # set UI.text (show (fuzzyA * fuzzyB)),
+            UI.td # set UI.text (show (fuzzyA / fuzzyB))
             ],
         UI.tr #+ [
-            UI.th # set UI.text "TriangleA і TriangleB",
-            UI.th # set UI.text (show (triangleA + triangleB)),
-            UI.th # set UI.text (show (triangleA - triangleB)),
-            UI.th # set UI.text (show (triangleA * triangleB)),
-            UI.th # set UI.text (show (triangleA / triangleB))
+            UI.td # set UI.text "TriangleA і TriangleB",
+            UI.td # set UI.text (show (triangleA + triangleB)),
+            UI.td # set UI.text (show (triangleA - triangleB)),
+            UI.td # set UI.text (show (triangleA * triangleB)),
+            UI.td # set UI.text (show (triangleA / triangleB))
             ],
 
         UI.tr #+ [
-            UI.th # set UI.text "TrapeziumA + TrapeziumB",
-            UI.th # set UI.text (show (trapeziumA + trapeziumB)),
-            UI.th # set UI.text (show (trapeziumA - trapeziumB)),
-            UI.th # set UI.text (show (trapeziumA * trapeziumB)),
-            UI.th # set UI.text (show (trapeziumA / trapeziumB))
+            UI.td # set UI.text "TrapeziumA + TrapeziumB",
+            UI.td # set UI.text (show (trapeziumA + trapeziumB)),
+            UI.td # set UI.text (show (trapeziumA - trapeziumB)),
+            UI.td # set UI.text (show (trapeziumA * trapeziumB)),
+            UI.td # set UI.text (show (trapeziumA / trapeziumB))
             ]
     ]
