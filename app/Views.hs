@@ -27,7 +27,7 @@ setOps :: FuzzyFiniteUniversum Double Double -> FuzzyFiniteUniversum Double Doub
 setOps (FuzzyFiniteUniversum fuzzyA) (FuzzyFiniteUniversum fuzzyB) v =
     let t = v `mod` 3
         implementation =
-            case v of
+            case t of
                 0 -> MaxMin
                 1 -> Algebraic
                 2 -> Bounded
@@ -138,7 +138,7 @@ displayAB setA setB =
                 displayFiniteFuzzySet fuzzySet
             ]
 
-triangleFuzzyNumberInfo :: TriangleMF Int -> TriangleMF Int -> UI Element
+triangleFuzzyNumberInfo :: TriangleMF Double -> TriangleMF Double -> UI Element
 triangleFuzzyNumberInfo (TriangleMF aa ba ca) (TriangleMF ab bb cb) =
     UI.div #+ [
         UI.p # set UI.text "Трикутні числа",
@@ -146,7 +146,7 @@ triangleFuzzyNumberInfo (TriangleMF aa ba ca) (TriangleMF ab bb cb) =
         UI.p # set UI.text ("T2 = " ++ show (ab,bb,cb))
     ]
 
-trapeziumFuzzyNumberInfo :: TrapeziumMF Int -> TrapeziumMF Int -> UI Element
+trapeziumFuzzyNumberInfo :: TrapeziumMF Double -> TrapeziumMF Double -> UI Element
 trapeziumFuzzyNumberInfo (TrapeziumMF aa ba ca da) (TrapeziumMF ab bb cb db) =
     UI.div #+ [
         UI.p # set UI.text "Трапецієподібні числа",
@@ -154,18 +154,40 @@ trapeziumFuzzyNumberInfo (TrapeziumMF aa ba ca da) (TrapeziumMF ab bb cb db) =
         UI.p # set UI.text ("T2 = " ++ show (ab,bb,cb,db))
     ]
 
-additionSection :: 
+arithOpSection ::
     (FuzzyFiniteUniversum Double Double, FuzzyFiniteUniversum Double Double) ->
-    (TriangleMF Int, TriangleMF Int) ->
-    (TrapeziumMF Int, Int) ->
+    (TriangleMF Double, TriangleMF Double) ->
+    (TrapeziumMF Double, TrapeziumMF Double) ->
     UI Element
 
-additionSection (fuzzyA, fuzzyB) (triangleA, triangleB) (trapeziumA, trapeziumB) =
+arithOpSection (fuzzyA, fuzzyB) (triangleA, triangleB) (trapeziumA, trapeziumB) =
     UI.table #+ [
-        UI.tr #+ [UI.th # set UI.text "Додавання"],
         UI.tr #+ [
-            UI.th # set UI.text "A + B",
-            UI.th # set UI.text (show (fuzzyA + fuzzyB))
-        ]
+            UI.td,
+            UI.th # set UI.text "Додавання",
+            UI.th # set UI.text "Віднімання",
+            UI.th # set UI.text "Множення",
+            UI.th # set UI.text "Ділення"],
+        UI.tr #+ [
+            UI.th # set UI.text "A і B",
+            UI.th # set UI.text (show (fuzzyA + fuzzyB)),
+            UI.th # set UI.text (show (fuzzyA - fuzzyB)),
+            UI.th # set UI.text (show (fuzzyA * fuzzyB)),
+            UI.th # set UI.text (show (fuzzyA / fuzzyB))
+            ],
+        UI.tr #+ [
+            UI.th # set UI.text "TriangleA і TriangleB",
+            UI.th # set UI.text (show (triangleA + triangleB)),
+            UI.th # set UI.text (show (triangleA - triangleB)),
+            UI.th # set UI.text (show (triangleA * triangleB)),
+            UI.th # set UI.text (show (triangleA / triangleB))
+            ],
 
+        UI.tr #+ [
+            UI.th # set UI.text "TrapeziumA + TrapeziumB",
+            UI.th # set UI.text (show (trapeziumA + trapeziumB)),
+            UI.th # set UI.text (show (trapeziumA - trapeziumB)),
+            UI.th # set UI.text (show (trapeziumA * trapeziumB)),
+            UI.th # set UI.text (show (trapeziumA / trapeziumB))
+            ]
     ]
