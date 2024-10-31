@@ -73,13 +73,13 @@ setOps (FuzzyFiniteUniversum fuzzyA) (FuzzyFiniteUniversum fuzzyB) v =
         let txt = printf "T = %d, %s" t (show implementation) in
         UI.p # set UI.text txt,
         UI.table #+ (
-            (UI.th #+ [UI.td # set UI.text "Об'єднання C"]) :
+            (UI.tr #+ [UI.th # set UI.text "Об'єднання C"]) :
             [UI.tr #+ [UI.td # set UI.text (printf "{%v, %v}" el mfValue)]
                 | (el, mfValue) <- Map.toList setOr]
 
         ),
         UI.table #+ (
-            UI.th #+ [UI.td # set UI.text "Перетин D"]
+            UI.tr #+ [UI.th # set UI.text "Перетин D"]
             :
             [UI.tr #+ [UI.td # set UI.text (printf "{%v, %v}" el mfValue)]
                 | (el, mfValue) <- Map.toList setAnd]
