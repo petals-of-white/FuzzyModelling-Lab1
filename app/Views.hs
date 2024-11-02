@@ -11,6 +11,10 @@ import           Text.Printf
 import           Variant
 
 
+appHeader :: UI Element
+appHeader = UI.header #+ [UI.h1 # set UI.text "Лабораторна робота №1. Рівас Сіваш Максим ЗК-31мн"]
+
+
 displayFiniteFuzzySet :: (PrintfArg k, PrintfArg v) => FuzzyFiniteUniversum v k -> UI Element
 
 displayFiniteFuzzySet (FuzzyFiniteUniversum fuzzyMap) = do
