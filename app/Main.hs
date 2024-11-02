@@ -37,7 +37,7 @@ setup window = do
         fuzzyNumberSection <- UI.div
 
         _ <- getBody window #+ [
-            UI.header #+ [UI.h1 # set UI.text "Лабораторна робота №1. Рівас Сіваш Максим ЗК-31мн"],
+            appHeader,
             UI.div #+ [
                 UI.div #+ [element gLabel, element gInput,
                 element kLabel, element kInput, element vValue],
