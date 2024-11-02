@@ -3,8 +3,10 @@ import qualified Graphics.UI.Threepenny      as UI
 import           Graphics.UI.Threepenny.Core
 import qualified Graphics.UI.Threepenny.SVG  as SVG
 import           Paths_FuzzyModelling_Lab1
+import           Text.Read                   (readMaybe)
 import           Variant
-import           Views
+import qualified Widgets
+
 
 main :: IO ()
 main = do
@@ -13,7 +15,6 @@ main = do
     jsPort = Just 8023,
     jsStatic = Just staticPath
 } setup
-
 
 setup :: Window -> UI ()
 setup window = do
@@ -25,56 +26,41 @@ setup window = do
         kInput <- UI.input # set UI.type_ "number" # set UI.id_ "k" # set UI.name "k" # set SVG.min "0" # set SVG.max "9"
         vValue <- UI.label # set UI.text "V = "
 
-        calcButton <- UI.button # set UI.type_ "button" # set UI.text "Обчислити"
-        setOpsSection <- UI.div
 
-        setsAB <- UI.div
+        let (defaultG, defaultK) = (3,3) :: (Int,Int)
+            eValidG =  filterJust $
+                    (\n -> if n >= 0 && n <= 9 then Just n else Nothing) <$>
+                    filterJust
+                    (readMaybe <$> UI.valueChange gInput) :: Event Int
 
-        setsInfo <- UI.div
+            eValidK = filterJust $
+                    (\n -> if n >= 0 && n <= 9 then Just n else Nothing) <$>
+                    filterJust
+                    (readMaybe <$> UI.valueChange kInput) :: Event Int
 
-        arithSection <- UI.div
+        validGs <- stepper defaultG eValidG
+        validKs <- stepper defaultK eValidK
 
-        fuzzyNumberSection <- UI.div
+        let validVarInput = uncurry varData <$> liftA2 (,) validGs validKs
+
+        _ <- element vValue # sink UI.text (("V = " ++) . show .  varV <$> validVarInput)
 
         _ <- getBody window #+ [
-            appHeader,
+            Widgets.appHeader,
             UI.div #+ [
-                UI.div #+ [element gLabel, element gInput,
-                element kLabel, element kInput, element vValue],
-                element calcButton,
-                element setsAB,
-                element setsInfo,
-                element setOpsSection,
-                element fuzzyNumberSection,
-                element arithSection
+                UI.div #+ [
+                    element gLabel, element gInput,
+                    element kLabel, element kInput, element vValue
+                ],
+
+                getElement <$> Widgets.fuzzyAB ((\VariantData {varSetA=a, varSetB=b} ->(a,b)) <$> validVarInput),
+                getElement <$> Widgets.displaySetInfo validVarInput,
+                getElement <$> Widgets.setOps validVarInput,
+                Widgets.triangleFuzzyNumberInfo (varTriangles <$> validVarInput),
+                Widgets.trapeziumFuzzyNumberInfo (varTrapezia <$> validVarInput),
+                Widgets.arithOpSection validVarInput
                 ]
             ]
 
-        on UI.click calcButton $ const $ do
-            g <- read <$> gInput # get UI.value
-            k <- read <$> kInput # get UI.value
-            let --g = 2
-                --k = 5
-                VariantData {
-                    varV = v,
-                    varSetA = setA, varSetB = setB,
-                    varTriangles = (t1,t2),
-                    varTrapezia = (trap1, trap2)} = varData g k
-
-
-            vValue # set' UI.text ("V = " ++ show v)
-
-            sets <- displayAB setA setB
-            setOpsEl <- setOps setA setB v
-            setsInfoEl <- displaySetInfo setA setB
-            arithOpSectionEl <- arithOpSection (setA,setB) (t1,t2) (trap1, trap2)
-            trianglesEl <- triangleFuzzyNumberInfo t1 t2
-            trapeziaEl <- trapeziumFuzzyNumberInfo trap1 trap2
-            
-            _ <- element setOpsSection # set UI.children [setOpsEl]
-            _ <- element setsAB # set UI.children [sets]
-            _ <- element setsInfo # set UI.children [setsInfoEl]
-            _ <- element arithSection # set UI.children [arithOpSectionEl]
-            _ <- element fuzzyNumberSection # set UI.children [trianglesEl, trapeziaEl]
-            return ()
+        return ()
 
