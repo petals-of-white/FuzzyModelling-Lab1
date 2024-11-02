@@ -75,7 +75,6 @@ executable fuzzy-lab1
   other-modules:
     Paths_FuzzyModelling_Lab1
     Variant
-    Views
     Widgets
 
   -- LANGUAGE extensions used by modules in this package.
