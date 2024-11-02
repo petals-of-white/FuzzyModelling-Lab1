@@ -1,6 +1,8 @@
 module Widgets where
 
+import           Data.List                   (intercalate, intersperse)
 import qualified Data.Map                    as Map
+import qualified Data.Set                    as S
 import           Fuzzy.Base
 import           Fuzzy.FiniteUniversum
 import           Fuzzy.TrapeziumMF
@@ -9,7 +11,6 @@ import qualified Graphics.UI.Threepenny      as UI
 import           Graphics.UI.Threepenny.Core
 import           Text.Printf
 import           Variant
-
 
 type SetName = String
 
@@ -45,8 +46,9 @@ fuzzySet bFuzzyData = do
     where
         makeCells (FuzzyFiniteUniversum fuzzyMap) =
             sequence $
-            [UI.td # set UI.text (printf "%v, %v" el mfValue)| (el, mfValue) <- first20]
-            where first20 = take 20 $ Map.toList fuzzyMap
+            take 20 $
+            [UI.td # set UI.text (printf "%.2v, %.2v" el mfValue)
+            | (el, mfValue) <- Map.toList fuzzyMap] ++ repeat UI.td
 
 fuzzyAB ::
     (PrintfArg v, PrintfArg k) =>
@@ -57,6 +59,9 @@ fuzzyAB bSets =
         getElement <$> fuzzySet ((, "A") . fst <$> bSets),
         getElement <$> fuzzySet ((, "B") . snd <$> bSets)
     ]
+
+showSet :: (Show a) => S.Set a -> String
+showSet s = '{': init (tail $ show $ S.toList s) ++ "}"
 
 displaySetInfo :: Behavior VariantData -> UI Element
 displaySetInfo bVarData = do
@@ -78,12 +83,17 @@ displaySetInfo bVarData = do
             UI.tr #+ [
                 UI.td # sink UI.text (fst <$> bFuzzyData),
                 UI.td # sink UI.text (show . height <$> bSet),
-                UI.td # sink UI.text (show . mode <$> bSet),
-                UI.td # sink UI.text (show . supp <$> bSet),
-                UI.td # sink UI.text (show . core <$> bSet),
-                UI.td # sink UI.text (show . flip alphacut 0.15 <$> bSet)
+                UI.td # sink UI.text (showSet . mode <$> bSet),
+                UI.td # sink UI.text (showSet . supp <$> bSet),
+                UI.td # sink UI.text (showSet . core <$> bSet),
+                UI.td # sink UI.text (showSet . flip alphacut 0.15 <$> bSet)
             ]
 
+triangleToTuple :: TriangleMF a -> (a,a,a)
+triangleToTuple (TriangleMF a b c) = (a,b,c)
+
+trapeziumToTuple :: TrapeziumMF d -> (d, d, d, d)
+trapeziumToTuple (TrapeziumMF a b c d) = (a,b,c,d)
 
 triangleFuzzyNumberInfo :: Behavior (TriangleMF Double, TriangleMF Double) -> UI Element
 triangleFuzzyNumberInfo bTriangles =
@@ -115,7 +125,7 @@ setOps bVarData  = do
             tableRows <-
                 sequence $
                 (UI.tr #+ [UI.th # set UI.text fName ]) :
-                [UI.tr #+ [UI.td # set UI.text (printf "{%v, %v}" el mfValue)]
+                [UI.tr #+ [UI.td # set UI.text (printf "<%.2f, %.2f>" el mfValue)]
                 | (el, mfValue) <- Map.toList fuzzy]
 
             _ <- element tabl # set UI.children tableRows
@@ -148,14 +158,25 @@ showComplement tabl (FuzzyFiniteUniversum notA) (FuzzyFiniteUniversum notB) = do
             ]
             :
             [UI.tr #+ [
-                UI.td # set UI.text (printf "{%v, %v}" elA mfA),
-                UI.td # set UI.text (printf "{%v, %v}" elB mfB)
+                UI.td # set UI.text (printf "<%.2f, %.2f>" elA mfA),
+                UI.td # set UI.text (printf "<%.2f, %.2f>" elB mfB)
             ] | ((elA, mfA), (elB, mfB)) <- zip (Map.toList notA) (Map.toList notB)]
 
         )
     _ <- element tabl # set UI.children tRows
     return ()
 
+showFuzzy :: SimpleFuzzy -> String
+showFuzzy (FuzzyFiniteUniversum fuzzyMap) =
+    '{' : intercalate ", " (map showPair $ Map.toList fuzzyMap) ++"}"
+    where showPair (el,mfValue) = printf "<%.2f, %.2f>" el mfValue
+
+
+showTriangle :: TriangleMF Double -> String
+showTriangle (TriangleMF a b c) = printf "(%.2f, %.2f, %.2f)" a b c
+
+showTrapezium :: TrapeziumMF Double -> String
+showTrapezium (TrapeziumMF a b c d) = printf "(%.2f, %.2f, %.2f, %.2f)" a b c d
 
 arithOpSection ::Behavior VariantData -> UI Element
 arithOpSection  bVarData = do
@@ -168,25 +189,25 @@ arithOpSection  bVarData = do
             UI.th # set UI.text "Ділення"],
         UI.tr #+ [
             UI.td # set UI.text "A і B",
-            UI.td # sink UI.text (show . uncurry (+) <$> twoFuzzy),
-            UI.td # sink UI.text (show . uncurry (-) <$> twoFuzzy),
-            UI.td # sink UI.text (show . uncurry (*) <$> twoFuzzy),
-            UI.td # sink UI.text (show . uncurry (/) <$> twoFuzzy)
+            UI.td # sink UI.text (showFuzzy . uncurry (+) <$> twoFuzzy),
+            UI.td # sink UI.text (showFuzzy . uncurry (-) <$> twoFuzzy),
+            UI.td # sink UI.text (showFuzzy . uncurry (*) <$> twoFuzzy),
+            UI.td # sink UI.text (showFuzzy . uncurry (/) <$> twoFuzzy)
             ],
         UI.tr #+ [
             UI.td # set UI.text "TriangleA і TriangleB",
-            UI.td # sink UI.text (show . uncurry (+) <$> twoTriangles),
-            UI.td # sink UI.text (show . uncurry (-) <$> twoTriangles),
-            UI.td # sink UI.text (show . uncurry (*) <$> twoTriangles),
-            UI.td # sink UI.text (show . uncurry (/) <$> twoTriangles)
+            UI.td # sink UI.text (showTriangle . uncurry (+) <$> twoTriangles),
+            UI.td # sink UI.text (showTriangle . uncurry (-) <$> twoTriangles),
+            UI.td # sink UI.text (showTriangle . uncurry (*) <$> twoTriangles),
+            UI.td # sink UI.text (showTriangle . uncurry (/) <$> twoTriangles)
             ],
 
         UI.tr #+ [
             UI.td # set UI.text "TrapeziumA + TrapeziumB",
-            UI.td # sink UI.text (show . uncurry (+) <$> twoTrapezia),
-            UI.td # sink UI.text (show . uncurry (-) <$> twoTrapezia),
-            UI.td # sink UI.text (show . uncurry (*) <$> twoTrapezia),
-            UI.td # sink UI.text (show . uncurry (/) <$> twoTrapezia)
+            UI.td # sink UI.text (showTrapezium . uncurry (+) <$> twoTrapezia),
+            UI.td # sink UI.text (showTrapezium . uncurry (-) <$> twoTrapezia),
+            UI.td # sink UI.text (showTrapezium . uncurry (*) <$> twoTrapezia),
+            UI.td # sink UI.text (showTrapezium . uncurry (/) <$> twoTrapezia)
             ]
         ]
     where
