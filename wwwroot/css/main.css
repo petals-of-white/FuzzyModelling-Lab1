@@ -1,15 +1,32 @@
-table {
+table.fuzzy-content {
     table-layout: fixed;
 }
 
-table,
+.fuzzy-content>tr {
+    height: 20px;
+}
+
+.fuzzy-content td {
+    width: 20px;
+}
+#main {
+    gap: 15px;
+    padding: 10px;
+}
+
+/* table,
 th,
 tr,
 td {
     border: 3px solid rgb(20, 111, 132);
     border-collapse: collapse;
-}
+} */
 
-tr:nth-child(even) {
+/* tr:nth-child(even) {
     background-color: rgba(27, 176, 176, 0.446);
-}
+} */
+
+/* #main {
+    display: flex;
+    flex-direction: column;
+} */
