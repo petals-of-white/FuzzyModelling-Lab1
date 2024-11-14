@@ -33,9 +33,16 @@ setup window = do
         kLabel <- UI.label # set UI.text "k = " # set UI.for "k"
         kInput <- UI.input # set UI.type_ "number" # set UI.id_ "k" # set UI.name "k" # set SVG.min "0" # set SVG.max "9"
         vValue <- UI.label # set UI.text "V = "
+        alphaLabel <- UI.label # set UI.text "α = " # set UI.for "alpha"
+        alphaInput <- UI.input
+            # set UI.id_ "alpha" # set UI.name "alpha"
+            # set UI.type_ "number" # set (UI.attr "step") "0.05"
+            # set SVG.min "0" # set SVG.max "1"
+
 
 
         let (defaultG, defaultK) = (3,3) :: (Int,Int)
+            defaultAlpha = 0.5 :: Double
             eValidG =  filterJust $
                     (\n -> if n >= 0 && n <= 9 then Just n else Nothing) <$>
                     filterJust
@@ -45,21 +52,29 @@ setup window = do
                     (\n -> if n >= 0 && n <= 9 then Just n else Nothing) <$>
                     filterJust
                     (readMaybe <$> UI.valueChange kInput) :: Event Int
+            eValidAlpha =
+                filterJust $
+                (\n -> if n >= 0.0 && n <= 1.0 then Just n else Nothing)
+                <$>
+                filterJust
+                (readMaybe <$> UI.valueChange alphaInput) :: Event Double
 
         validGs <- stepper defaultG eValidG
         validKs <- stepper defaultK eValidK
+        validAlphas <- stepper defaultAlpha eValidAlpha
 
-        let validVarInput = uncurry varData <$> liftA2 (,) validGs validKs
+        let validVarInput = (\(g, k, alpha) -> varData g k alpha) <$> liftA3 (,,) validGs validKs validAlphas
 
         _ <- element vValue # sink UI.text (("V = " ++) . show .  varV <$> validVarInput)
 
         _ <- getBody window #+ [
             Widgets.appHeader,
             UI.mkElement "main" # set UI.id_ "main" #. "pure-g" #+ [
-                UI.div # set UI.id_ "displayABSection" #. "pure-u-1-1" #+ [
+                UI.div #. "pure-u-1-1" #+ [
                     element gLabel, element gInput,
                     element kLabel, element kInput,
-                    element vValue
+                    element vValue,
+                    element alphaLabel, element alphaInput
                 ],
 
                 (getElement <$> Widgets.fuzzyAB ((\VariantData {varSetA=a, varSetB=b} ->(a,b)) <$> validVarInput)) #. " pure-u-1-1",

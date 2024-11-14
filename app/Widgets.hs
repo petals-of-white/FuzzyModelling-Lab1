@@ -76,21 +76,24 @@ displaySetInfo bVarData = do
             ]
         ],
         UI.tbody #+ [
-            fSetRow (("A",) . varSetA <$> bVarData),
-            fSetRow (("B",) . varSetA <$> bVarData)
+            fSetRow ((\variant -> ("A", varSetA variant, varAlpha variant)) <$> bVarData),
+            fSetRow ((\variant -> ("B", varSetB variant, varAlpha variant)) <$> bVarData)
         ]
 
         ]
 
-    where fSetRow bFuzzyData =
-            let bSet = snd <$> bFuzzyData in
+    where
+        fSetRow bFuzzyData =
+            let bName = (\(n,_, _) -> n) <$> bFuzzyData
+                bSet = (\(_,s, _) -> s) <$> bFuzzyData
+            in
             UI.tr #+ [
-                UI.td # sink UI.text (fst <$> bFuzzyData),
+                UI.td # sink UI.text bName,
                 UI.td # sink UI.text (show . height <$> bSet),
                 UI.td # sink UI.text (showSet . mode <$> bSet),
                 UI.td # sink UI.text (showSet . supp <$> bSet),
                 UI.td # sink UI.text (showSet . core <$> bSet),
-                UI.td # sink UI.text (showSet . flip alphacut 0.15 <$> bSet)
+                UI.td # sink UI.text (showSet . (\(_b,s,alpha) -> alphacut s alpha) <$> bFuzzyData)
             ]
 
 triangleToTuple :: TriangleMF a -> (a,a,a)
