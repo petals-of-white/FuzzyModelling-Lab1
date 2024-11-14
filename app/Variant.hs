@@ -13,6 +13,7 @@ type SimpleFuzzy = FuzzyFiniteUniversum Double Double
 data VariantData = VariantData {
   varG :: Int, varK :: Int,
   varV :: Int, varT :: Int,
+  varAlpha :: Double,
   varImplmentation :: OpsImplementation,
   varSetA :: SimpleFuzzy,
   varSetB :: SimpleFuzzy,
@@ -25,12 +26,13 @@ data VariantData = VariantData {
   }
 
 -- | Використовуйте цю функцію для створення даних для варіанту
-varData :: Int -> Int -> VariantData
-varData g k = VariantData {
+varData :: Int -> Int -> Double -> VariantData
+varData g k alpha = VariantData {
   varG = g,
   varK = k,
   varV = v,
   varT = t,
+  varAlpha = alpha,
   varImplmentation = implementation,
   varSetA = setA,
   varSetB = setB,
