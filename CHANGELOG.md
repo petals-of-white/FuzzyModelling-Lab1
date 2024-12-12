@@ -1,4 +1,4 @@
-# Revision history for FuzzyModelling-Lab1
+# Revision history for FuzzyHaskell
 
 ## 0.1.0.0 -- YYYY-mm-dd
 

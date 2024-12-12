@@ -11,7 +11,7 @@ cabal-version:   3.0
 --   http://haskell.org/cabal/users-guide/
 --
 -- The name of the package.
-name:            FuzzyModelling-Lab1
+name:            FuzzyHaskell
 
 -- The package version.
 -- See the Haskell package versioning policy (PVP) for standards
@@ -47,7 +47,7 @@ common warnings
 
 library fuzzy
   build-depends:
-    , base        ^>=4.17.2.1
+    , base        == 4.18.2.1
     , containers
 
   hs-source-dirs:   lib
@@ -62,33 +62,4 @@ library fuzzy
     Fuzzy.TrapeziumMF
     Fuzzy.TriangleMF
 
-  default-language: GHC2021
-
-executable fuzzy-lab1
-  -- Import common warning flags.
-  import:           warnings
-
-  -- .hs or .lhs file containing the Main module.
-  main-is:          Main.hs
-
-  -- Modules included in this executable, other than Main.
-  other-modules:
-    Elements
-    Paths_FuzzyModelling_Lab1
-    Variant
-    Widgets
-
-  -- LANGUAGE extensions used by modules in this package.
-  -- other-extensions:
-  -- Other library packages from which modules are imported.
-  build-depends:
-    , base            ^>=4.17.2.1
-    , containers
-    , fuzzy
-    , threepenny-gui
-
-  -- Directories containing source files.
-  hs-source-dirs:   app
-
-  -- Base language which the package is written in.
   default-language: GHC2021

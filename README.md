@@ -1,1 +1,1 @@
-# FuzzyModelling-Lab1
+# FuzzyHaskell
