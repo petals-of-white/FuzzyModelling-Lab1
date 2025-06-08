@@ -6,7 +6,7 @@ class Fuzzy f e where
     type Crisp f e
     type Returned f e
     supp :: f e -> Crisp f e
-    is :: e -> f e -> Returned f e
+    is :: f e -> e -> Returned f e
     height :: f e -> Returned f e
     core :: f e -> Crisp f e
     alphacut :: f e -> Returned f e -> Crisp f e

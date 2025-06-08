@@ -6,6 +6,8 @@ import           Fuzzy.Interval
 
 -- | Трикутне число
 data TriangleMF a = TriangleMF {triangleA :: a, triangleB :: a, triangleC :: a}
+
+
 instance (Show a) => Show (TriangleMF a) where
   show (TriangleMF a b c) = "Triangle " ++ show (a,b,c)
 
@@ -41,7 +43,7 @@ instance (Fractional k, Ord k) => Fuzzy TriangleMF k  where
     type Crisp TriangleMF k = [Interval k]
     type Returned TriangleMF k = k
     supp (TriangleMF a b c) = [Between (Exclude a) (Exclude c)]
-    is x (TriangleMF a b c) | x <= a || x >= c = 0
+    is (TriangleMF a b c) x | x <= a || x >= c = 0
                             | a <= x && x <= b = (x - a) / (b - a)
                             | b <= x && x <= c = (c - x) / (c - b)
 

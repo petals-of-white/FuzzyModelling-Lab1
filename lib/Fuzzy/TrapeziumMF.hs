@@ -50,7 +50,7 @@ instance (Fractional a, Ord a) => Fuzzy TrapeziumMF a where
     type Crisp TrapeziumMF a = [Interval a]
     type Returned TrapeziumMF a = a
     supp (TrapeziumMF a b c d) = [Between (Exclude a) (Exclude b)]
-    is x (TrapeziumMF a b c d)  | x <= a = 0
+    is (TrapeziumMF a b c d) x  | x <= a = 0
                                 | a <= x && x <= b = (x - a) / (b - a)
                                 | b <= x && x <= c = 1
                                 | c <= x && x <= d = (d - x) / (d - c)

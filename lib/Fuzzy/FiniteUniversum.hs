@@ -49,7 +49,7 @@ instance (Fractional v, Ord k, Ord v) => Fuzzy (FuzzyFiniteUniversum v) k where
     type Crisp (FuzzyFiniteUniversum v) k = Set k
     type Returned (FuzzyFiniteUniversum v) k = v
     supp (FuzzyFiniteUniversum fuzzyMap) = Map.keysSet $ Map.filterWithKey (\_el mfValue -> mfValue > 0) fuzzyMap
-    is x (FuzzyFiniteUniversum fuzzyMap) = fromMaybe 0 $ Map.lookup x fuzzyMap
+    is (FuzzyFiniteUniversum fuzzyMap) x  = fromMaybe 0 $ Map.lookup x fuzzyMap
     height (FuzzyFiniteUniversum fuzzyMap) = fromMaybe 0 $ Map.foldlWithKey folder Nothing fuzzyMap
         where folder acc el mfValue = case acc of
                 Nothing                    -> Just mfValue
